@@ -32,8 +32,8 @@ public final class ProfileStorage {
      * @throws IOException Thrown exception
      */
     public void load(@NotNull final NicknamePlugin plugin) throws IOException {
-        final Object[] contents = getFileContents(plugin);
-        final ConfigurationSection userData = (ConfigurationSection) contents[2];
+        final FileContent contents = getFileContents(plugin);
+        final ConfigurationSection userData = contents.getSection();
 
         if (userData == null) {
             return;
@@ -54,8 +54,8 @@ public final class ProfileStorage {
      * @throws IOException Thrown exception
      */
     public void save(@NotNull final NicknamePlugin plugin) throws IOException {
-        final Object[] contents = getFileContents(plugin);
-        final ConfigurationSection userData = (ConfigurationSection) contents[2];
+        final FileContent contents = getFileContents(plugin);
+        final ConfigurationSection userData = contents.getSection();
 
         if (userData == null) {
             return;
@@ -69,19 +69,18 @@ public final class ProfileStorage {
             userData.set(DATA_SECTION + "." + user + ".nickname", profile.getNickname());
         }
 
-        ((FileConfiguration) contents[1]).save((File) contents[0]);
+        contents.getConfiguration().save(contents.getFile());
     }
 
     /**
-     * Returns a {@link Object[]} of our user data file contents
+     * Returns a {@link FileContent} of our user data file contents
      *
      * @param plugin Our plugin instance {@link NicknamePlugin}
      * @return User data file contents from file "data.yml"
      * @throws IOException Thrown exception
      */
-    private Object[] getFileContents(@NotNull final NicknamePlugin plugin) throws IOException {
+    private FileContent getFileContents(@NotNull final NicknamePlugin plugin) throws IOException {
         final File file = new File(plugin.getDataFolder() + "/" + FILE_IDENTIFIER);
-        Object[] result = new Object[]{null, null, null};
 
         if (!file.exists()) {
             file.createNewFile();
@@ -90,11 +89,33 @@ public final class ProfileStorage {
         final FileConfiguration configuration = YamlConfiguration.loadConfiguration(file);
         final ConfigurationSection section = configuration.getConfigurationSection(DATA_SECTION);
 
-        result[0] = file;
-        result[1] = configuration;
-        result[2] = section;
+        return new FileContent(file, configuration, section);
+    }
 
-        return result;
+    private class FileContent {
+
+        private final File file;
+        private final FileConfiguration configuration;
+        private final ConfigurationSection section;
+
+        FileContent(@NotNull final File file, @NotNull final FileConfiguration configuration, final ConfigurationSection section) {
+            this.file = file;
+            this.configuration = configuration;
+            this.section = section;
+        }
+
+        File getFile() {
+            return this.file;
+        }
+
+        FileConfiguration getConfiguration() {
+            return this.configuration;
+        }
+
+        ConfigurationSection getSection() {
+            return this.section;
+        }
+
     }
 
     /**

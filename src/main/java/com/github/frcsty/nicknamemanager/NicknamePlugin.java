@@ -10,6 +10,7 @@ import com.github.frcsty.nicknamemanager.util.Message;
 import me.mattstudios.mf.base.CommandManager;
 import me.mattstudios.mf.base.MessageHandler;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -22,6 +23,7 @@ public final class NicknamePlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        final NicknamePlugin plugin = this;
         saveDefaultConfig();
 
         try {
@@ -40,6 +42,18 @@ public final class NicknamePlugin extends JavaPlugin {
         registerCommandMessage(commandManager);
 
         new NicknamePlaceholder(this).register();
+
+        final long time = Long.valueOf(this.configStorage.getConfigString("settings.auto-save-interval")) * 20;
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                try {
+                    profileStorage.save(plugin);
+                } catch (final IOException ex) {
+                    plugin.getLogger().log(Level.WARNING, "Failed to save data from ProfileStorage.java!", ex);
+                }
+            }
+        }.runTaskTimer(this, time, time);
     }
 
     @Override
@@ -77,7 +91,7 @@ public final class NicknamePlugin extends JavaPlugin {
 
         for (final MessageIdentifier message : MessageIdentifier.values()) {
             handler.register(message.getIdentifier(), sender ->
-                Message.send(sender, this.getConfigStorage().getConfigString("message." + message.getPath()))
+                    Message.send(sender, this.getConfigStorage().getConfigString("message." + message.getPath()))
             );
         }
     }

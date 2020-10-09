@@ -5,7 +5,7 @@ settings:
 # Message format syntax (formats and colors)
 # https://mf.mattstudios.me/message/mf-msg/syntax
 message:
-  changed-nickname: "*&aYou have successfully changed your nickname to&8:* &7'%nicknamemanager_nickname%&7'&!"
+  changed-nickname: "*&aYou have successfully changed your nickname to&8:* &7'%nicknamemanager_nickname%&7'!"
   reset-nickname: "&aYou have *&freset* &ayour nickname!"
 
   reloaded-plugin: "&aSuccessfully reloaded the plugin!"
