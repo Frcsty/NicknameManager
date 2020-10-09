@@ -1,0 +1,44 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+plugins {
+	id "com.github.johnrengelman.shadow" version "6.0.0"
+	id "java"
+}
+
+group = "com.github.frcsty.nicknamemanager"
+version = "0.0.1-Alpha"
+
+repositories {
+	mavenCentral()
+	maven { url "http://repo.extendedclip.com/content/repositories/placeholderapi/" }
+	maven { url "https://repo.destroystokyo.com/repository/maven-public/" }
+	maven { url "https://oss.sonatype.org/content/groups/public/" }
+	maven { url "https://repo.mattstudios.me/artifactory/public" }
+}
+
+dependencies {
+	implementation "me.mattstudios.utils:matt-framework:1.4"
+	implementation "me.mattstudios:mf-msg-bukkit:2.0.1"
+	implementation "org.jetbrains:annotations:+"
+
+	compileOnly "me.clip:placeholderapi:2.10.9"
+	compileOnly "com.destroystokyo.paper:paper-api:1.16.3-R0.1-SNAPSHOT"
+}
+
+processResources {
+	from(sourceSets.main.resources.srcDirs) {
+		filter ReplaceTokens, tokens: [version: version]
+	}
+}
+
+shadowJar {
+	relocate "me.mattstudios.mf", "${group}.library.utils"
+	relocate "me.mattstudios.mfmsg", "${group}.library.msg"
+
+	archiveFileName.set("NicknameManager-${version}.jar")
+}
+
+def compatibilityVersion = JavaVersion.VERSION_1_8
+
+sourceCompatibility = compatibilityVersion
+targetCompatibility = compatibilityVersion

@@ -1,0 +1,5 @@
+name: NicknameManager
+version: @version@
+main: com.github.frcsty.nicknamemanager.NicknamePlugin
+author: Frcsty
+depend: ["PlaceholderAPI"]

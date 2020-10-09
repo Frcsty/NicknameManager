@@ -1,0 +1,15 @@
+settings:
+  # Auto Save Interval Time, (in seconds)
+  auto-save-interval: 600
+
+# Message format syntax (formats and colors)
+# https://mf.mattstudios.me/message/mf-msg/syntax
+message:
+  changed-nickname: "*&aYou have successfully changed your nickname to&8:* &7'%nicknamemanager_nickname%&7'&!"
+  reset-nickname: "&aYou have *&freset* &ayour nickname!"
+
+  reloaded-plugin: "&aSuccessfully reloaded the plugin!"
+  no-permission: "&cYou do not have permission to execute this command!"
+  player-only: "&cThis command can not be ran through console!"
+  unknown-command: "&cThis command does not exist!"
+  wrong-usage: "&cInvalid usage for the specified command!"
